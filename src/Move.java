@@ -25,4 +25,9 @@ public class Move extends Coordinate {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return this.row + " " + this.col + " " + this.captureOpposite;
+    }
 }

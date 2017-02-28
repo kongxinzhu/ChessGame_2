@@ -67,10 +67,10 @@ public class ChessGameGUI extends JFrame implements ActionListener {
         Object source = e.getSource();
 
         if (source == hint) {
-            System.out.println("hint is clicked!");
+            board.setHighLight();
         }
         // refresh the board
-        if (source == refresh) {
+        else if (source == refresh) {
             boardPanel.removeAll();
             boardPanel.revalidate();
             boardPanel.repaint();
@@ -78,11 +78,8 @@ public class ChessGameGUI extends JFrame implements ActionListener {
             board.addActionListener(this);
             boardPanel.add(board);
         } else {
-
             SquareOfBoard clickedSquare = (SquareOfBoard) source;
-            int row = clickedSquare.coordinateOfButton.row;
-            int col = clickedSquare.coordinateOfButton.col;
-            Piece targetPiece = board.realBoard.boardTrace[row][col];
+            Piece targetPiece = board.realBoard.alivePieces.get(clickedSquare.coordinateOfButton);
 
             // check if it's right turn
             if (targetPiece != null && targetPiece.color == board.realBoard.turn % 2 && board.realBoard.selectedPiece == null) {
@@ -93,10 +90,9 @@ public class ChessGameGUI extends JFrame implements ActionListener {
                     board.realBoard.setSelectedPiece(null);
                     board.start = null;
                 }
-                board.setHighLight();
             } else {
                 if (Move.isInAvailablePositionList(board.realBoard.availableMove, clickedSquare.coordinateOfButton)) {
-                    board.realBoard.upDate(board.realBoard.selectedPiece.coordinate, clickedSquare.coordinateOfButton);
+                    board.realBoard.upDate(clickedSquare.coordinateOfButton);
                     board.boardUpdate(board.start.coordinateOfButton, clickedSquare.coordinateOfButton);
                     board.realBoard.turn++;
                 }

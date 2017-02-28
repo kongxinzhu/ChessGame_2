@@ -37,15 +37,15 @@ public class BoardGUI extends JPanel {
             int col = 0;
             if (row % 2 != 0) {
                 for (int k = 0; k < 4; col++, k++) {
-                    buttons[row][col] = new SquareOfBoard(new Coordinate(row, col), Color.white);
+                    buttons[row][col] = new SquareOfBoard(realBoard.coordinates[row][col], Color.white);
                     col++;
-                    buttons[row][col] = new SquareOfBoard(new Coordinate(row, col), Color.gray);
+                    buttons[row][col] = new SquareOfBoard(realBoard.coordinates[row][col], Color.gray);
                 }
             } else {
                 for (int k = 0; k < 4; col++, k++) {
-                    buttons[row][col] = new SquareOfBoard(new Coordinate(row, col), Color.gray);
+                    buttons[row][col] = new SquareOfBoard(realBoard.coordinates[row][col], Color.gray);
                     col++;
-                    buttons[row][col] = new SquareOfBoard(new Coordinate(row, col), Color.white);
+                    buttons[row][col] = new SquareOfBoard(realBoard.coordinates[row][col], Color.white);
                 }
             }
         }
@@ -58,17 +58,9 @@ public class BoardGUI extends JPanel {
         }
 
         // initialize the beginning state of game
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 8; j++) {
-                Icon iconOfPiece = new ImageIcon(getClass().getResource(realBoard.boardTrace[i][j].imagePath));
-                buttons[i][j].setIcon(iconOfPiece);
-            }
-        }
-        for (int i = 6; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                Icon iconOfPiece = new ImageIcon(getClass().getResource(realBoard.boardTrace[i][j].imagePath));
-                buttons[i][j].setIcon(iconOfPiece);
-            }
+        for (Piece piece : realBoard.alivePieces.values()) {
+            Icon iconOfPiece = new ImageIcon(getClass().getResource(piece.imagePath));
+            buttons[piece.coordinate.row][piece.coordinate.col].setIcon(iconOfPiece);
         }
         setSize(600, 600);
     }
@@ -87,45 +79,35 @@ public class BoardGUI extends JPanel {
 
         int startRow = start.row;
         int startCol = start.col;
-        int endRow = end.row;
-        int endCol = end.col;
 
-
-        if (realBoard.boardTrace[startRow][startCol] == null) {
-            buttons[startRow][startCol].setIcon(null);
-        }
-
-        if (realBoard.boardTrace[startRow][startCol] != null) {
-            imageOfPiece = new ImageIcon(getClass().getResource(realBoard.boardTrace[startRow][startCol].imagePath));
-            buttons[startRow][startCol].setIcon(imageOfPiece);
-        }
-
-        if (realBoard.boardTrace[endRow][endCol] == null) {
-            buttons[endRow][endCol].setIcon(null);
-        }
-
-        if (realBoard.boardTrace[endRow][endCol] != null) {
-            imageOfPiece = new ImageIcon(getClass().getResource(realBoard.boardTrace[endRow][endCol].imagePath));
-            buttons[endRow][endCol].setIcon(imageOfPiece);
-        }
+        buttons[startRow][startCol].setIcon(null);
+        imageOfPiece = new ImageIcon(getClass().getResource(realBoard.alivePieces.get(end).imagePath));
+        buttons[realBoard.alivePieces.get(end).coordinate.row][realBoard.alivePieces.get(end).coordinate.col].setIcon(imageOfPiece);
     }
 
 
     public void setHighLight() {
-        for (Move move : realBoard.availableMove) {
-            Color c = buttons[move.row][move.col].getBackground();
-            originalSquareColor.add(c);
+        if (realBoard.availableMove.size() != 0) {
+            Move move = realBoard.availableMove.peek();
+            Color destination = buttons[move.row][move.col].getBackground();
+            Color start = buttons[realBoard.selectedPiece.coordinate.row][realBoard.selectedPiece.coordinate.col].getBackground();
+            originalSquareColor.add(destination);
+            originalSquareColor.add(start);
             buttons[move.row][move.col].setBackground(Color.YELLOW);
+            buttons[realBoard.selectedPiece.coordinate.row][realBoard.selectedPiece.coordinate.col].setBackground(Color.YELLOW);
         }
     }
 
     public void removeHighLight() {
-        Color color;
+        Color destinationColor;
+        Color startColor;
         Move move;
-        while (!originalSquareColor.isEmpty()) {
-            color = originalSquareColor.pop();
+        if (originalSquareColor.size() != 0) {
+            destinationColor = originalSquareColor.pop();
+            startColor = originalSquareColor.pop();
             move = realBoard.availableMove.pop();
-            this.buttons[move.row][move.col].setBackground(color);
+            buttons[move.row][move.col].setBackground(destinationColor);
+            buttons[start.coordinateOfButton.row][start.coordinateOfButton.col].setBackground(startColor);
         }
     }
 }

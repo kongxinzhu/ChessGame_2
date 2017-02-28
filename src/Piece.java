@@ -23,11 +23,11 @@ public abstract class Piece {
     public boolean isValidPosition(Move move, Board board){
         boolean added = false;
         if(move.inBoard()) {
-            if(board.boardTrace[move.row][move.col] != null && board.boardTrace[move.row][move.col].color != board.selectedPiece.color) {
+            if(board.alivePieces.containsKey(new Coordinate(move.row,move.col)) && board.alivePieces.get(new Coordinate(move.row,move.col)).color != board.selectedPiece.color) {
                 move.captureOpposite = true;
                 board.availableMove.add(move);
                 added = true;
-            } else if(board.boardTrace[move.row][move.col] == null) {
+            } else if(!board.alivePieces.containsKey(new Coordinate(move.row,move.col))) {
                 board.availableMove.add(move);
                 added = true;
             }

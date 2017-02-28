@@ -29,14 +29,14 @@ public class PiecePawn extends Piece {
             // check if there is any opposite's piece in the valid range of this pawn
             temp = new Move(this.coordinate);
             temp.moveToNorthWest();
-            if (temp.inBoard() && board.boardTrace[temp.row][temp.col] != null && board.boardTrace[temp.row][temp.col].color != this.color) {
+            if (temp.inBoard() && board.alivePieces.containsKey(temp) && board.alivePieces.get(temp).color != this.color) {
                 temp.captureOpposite = true;
                 board.availableMove.add(temp);
             }
 
             temp = new Move(this.coordinate);
             temp.moveToNorthEast();
-            if (temp.inBoard() && board.boardTrace[temp.row][temp.col] != null && board.boardTrace[temp.row][temp.col].color != this.color) {
+            if (temp.inBoard() && board.alivePieces.containsKey(temp) && board.alivePieces.get(temp).color != this.color) {
                 temp.captureOpposite = true;
                 board.availableMove.add(temp);
             }
@@ -58,14 +58,14 @@ public class PiecePawn extends Piece {
             // check if there is any opposite's piece in the valid range of this pawn
             temp = new Move(this.coordinate);
             temp.moveToSouthWest();
-            if (temp.inBoard() && board.boardTrace[temp.row][temp.col] != null && board.boardTrace[temp.row][temp.col].color != this.color) {
+            if (temp.inBoard() && board.alivePieces.containsKey(temp) && board.alivePieces.get(temp).color != this.color) {
                 temp.captureOpposite = true;
                 board.availableMove.add(temp);
             }
 
             temp = new Move(this.coordinate);
             temp.moveToSouthEast();
-            if (temp.inBoard() && board.boardTrace[temp.row][temp.col] != null && board.boardTrace[temp.row][temp.col].color != this.color) {
+            if (temp.inBoard() && board.alivePieces.containsKey(temp) && board.alivePieces.get(temp).color != this.color) {
                 temp.captureOpposite = true;
                 board.availableMove.add(temp);
             }
@@ -77,7 +77,7 @@ public class PiecePawn extends Piece {
     @Override
     public boolean isValidPosition(Move move, Board board) {
         boolean added = false;
-        if (move.inBoard() && board.boardTrace[move.row][move.col] == null) {
+        if (move.inBoard() && !board.alivePieces.containsKey(move)) {
             board.availableMove.add(move);
             added = true;
         }
