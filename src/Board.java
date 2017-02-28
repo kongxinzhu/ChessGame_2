@@ -5,28 +5,37 @@ import java.util.*;
  */
 
 public class Board {
+    static final int BLACK = 0;
+    static final int WHITE = 1;
+
+    // valid selected piece
+    Piece selectedPiece;
+
+    // current valid move position
+    LinkedList<Move> availableMove = new LinkedList();
+
+    // odd means white
+    // even means black
+    int turn = 1;
+
     Piece[][] boardTrace;
-    int queenPromotion = -1;
-    int knightPromotion = -2;
-    int bishopPromotion = -3;
-    int rookPromotion = -4;
 
     // constructor
     public Board() {
         // initialize the beginning state of game
         // black pieces
         boardTrace = new Piece[8][8];
-        boardTrace[0][0] = new Piece("black_rook", "Icon/black_rook.png");
-        boardTrace[0][1] = new Piece("black_knight", "Icon/black_knight.png");
-        boardTrace[0][2] = new Piece("black_bishop", "Icon/black_bishop.png");
-        boardTrace[0][3] = new Piece("black_queen", "Icon/black_queen.png");
-        boardTrace[0][4] = new Piece("black_king", "Icon/black_king.png");
-        boardTrace[0][5] = new Piece("black_bishop", "Icon/black_bishop.png");
-        boardTrace[0][6] = new Piece("black_knight", "Icon/black_knight.png");
-        boardTrace[0][7] = new Piece("black_rook", "Icon/black_rook.png");
+        boardTrace[0][0] = new PieceRook("rook", "Icon/black_rook.png", BLACK, new Coordinate(0,0));
+        boardTrace[0][1] = new PieceKnight("knight", "Icon/black_knight.png",BLACK, new Coordinate(0,1));
+        boardTrace[0][2] = new PieceBishop("bishop", "Icon/black_bishop.png", BLACK, new Coordinate(0,2));
+        boardTrace[0][3] = new PieceQueen("queen", "Icon/black_queen.png", BLACK, new Coordinate(0,3));
+        boardTrace[0][4] = new PieceKing("king", "Icon/black_king.png",BLACK, new Coordinate(0,4));
+        boardTrace[0][5] = new PieceBishop("black_bishop", "Icon/black_bishop.png", BLACK, new Coordinate(0,5));
+        boardTrace[0][6] = new PieceKnight("knight", "Icon/black_knight.png",BLACK, new Coordinate(0,6));
+        boardTrace[0][7] = new PieceRook("rook", "Icon/black_rook.png", BLACK, new Coordinate(0,7));
         // pawn
         for (int col = 0; col < 8; col++) {
-            boardTrace[1][col] = new Piece("black_pawn", "Icon/black_pawn.png");
+            boardTrace[1][col] = new PiecePawn("pawn", "Icon/black_pawn.png", BLACK, new Coordinate(1,col));
         }
 
         // empty square
@@ -37,17 +46,38 @@ public class Board {
         }
 
         // white pieces
-        boardTrace[7][0] = new Piece("white_rook", "Icon/white_rook.png");
-        boardTrace[7][1] = new Piece("white_knight", "Icon/white_knight.png");
-        boardTrace[7][2] = new Piece("white_bishop", "Icon/white_bishop.png");
-        boardTrace[7][3] = new Piece("white_queen", "Icon/white_queen.png");
-        boardTrace[7][4] = new Piece("white_king", "Icon/white_king.png");
-        boardTrace[7][5] = new Piece("white_bishop", "Icon/white_bishop.png");
-        boardTrace[7][6] = new Piece("white_knight", "Icon/white_knight.png");
-        boardTrace[7][7] = new Piece("white_rook", "Icon/white_rook.png");
+        boardTrace[7][0] = new PieceRook("rook", "Icon/white_rook.png", WHITE, new Coordinate(7,0));
+        boardTrace[7][1] = new PieceKnight("knight", "Icon/white_knight.png",WHITE, new Coordinate(7,1));
+        boardTrace[7][2] = new PieceBishop("bishop", "Icon/white_bishop.png", WHITE, new Coordinate(7,2));
+        boardTrace[7][3] = new PieceQueen("queen", "Icon/white_queen.png", WHITE, new Coordinate(7,3));
+        boardTrace[7][4] = new PieceKing("king", "Icon/white_king.png", WHITE, new Coordinate(7,4));
+        boardTrace[7][5] = new PieceBishop("bishop", "Icon/white_bishop.png", WHITE, new Coordinate(7,5));
+        boardTrace[7][6] = new PieceKnight("knight", "Icon/white_knight.png",WHITE, new Coordinate(7,6));
+        boardTrace[7][7] = new PieceRook("rook", "Icon/white_rook.png", WHITE, new Coordinate(7,7));
         // pawn
         for (int col = 0; col < 8; col++) {
-            boardTrace[6][col] = new Piece("white_pawn", "Icon/white_pawn.png");
+            boardTrace[6][col] = new PiecePawn("pawn", "Icon/white_pawn.png", WHITE, new Coordinate(6,col));
         }
+    }
+
+    public void setSelectedPiece(Piece selectedPiece) {
+        this.selectedPiece = selectedPiece;
+    }
+
+    // set available move position list
+    public void setAvailableMove() {
+        selectedPiece.findAvailablePosition(this);
+    }
+
+
+    public void upDate(Coordinate start, Coordinate end) {
+        int startRow = start.row;
+        int startCol = start.col;
+        int endCol = end.col;
+        int endRow = end.row;
+
+        boardTrace[startRow][startCol].upDateCoordinate(end);
+        boardTrace[endRow][endCol] = boardTrace[startRow][startCol];
+        boardTrace[startRow][startCol] = null;
     }
 }

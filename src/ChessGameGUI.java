@@ -3,6 +3,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
 
 public class ChessGameGUI extends JFrame implements ActionListener {
     BoardGUI board;
@@ -14,14 +15,13 @@ public class ChessGameGUI extends JFrame implements ActionListener {
         // set title of window
         setTitle("Chess Game");
 
-
         // contentPane contains boardPanel and buttonPanel
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
 
         // boardPanel contains board
         boardPanel = new JPanel();
-        boardPanel.setBorder(new EmptyBorder(20,20,20,10));
+        boardPanel.setBorder(new EmptyBorder(20, 20, 20, 10));
         boardPanel.setLayout(new BoxLayout(boardPanel, BoxLayout.Y_AXIS));
 
         board = new BoardGUI();
@@ -33,7 +33,7 @@ public class ChessGameGUI extends JFrame implements ActionListener {
 
         // buttonPanel contains two buttons which are prev and next
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0,10,0,20));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 20));
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
         // position buttonPanel in the center
@@ -46,6 +46,7 @@ public class ChessGameGUI extends JFrame implements ActionListener {
         buttonPanel.add(Box.createVerticalGlue());
 
         // add listener
+        board.addActionListener(this);
         hint.addActionListener(this);
         refresh.addActionListener(this);
 
@@ -62,16 +63,49 @@ public class ChessGameGUI extends JFrame implements ActionListener {
     }
 
     @Override
-    public void actionPerformed (ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
+        if (source == hint) {
+            System.out.println("hint is clicked!");
+        }
         // refresh the board
-        if(source == refresh) {
+        if (source == refresh) {
             boardPanel.removeAll();
             boardPanel.revalidate();
             boardPanel.repaint();
             board = new BoardGUI();
+            board.addActionListener(this);
             boardPanel.add(board);
+        } else {
+
+            SquareOfBoard clickedSquare = (SquareOfBoard) source;
+            int row = clickedSquare.coordinateOfButton.row;
+            int col = clickedSquare.coordinateOfButton.col;
+            Piece targetPiece = board.realBoard.boardTrace[row][col];
+
+            // check if it's right turn
+            if (targetPiece != null && targetPiece.color == board.realBoard.turn % 2 && board.realBoard.selectedPiece == null) {
+                board.start = clickedSquare;
+                board.realBoard.setSelectedPiece(targetPiece);
+                board.realBoard.setAvailableMove();
+                if(board.realBoard.availableMove.size() == 0) {
+                    board.realBoard.setSelectedPiece(null);
+                    board.start = null;
+                }
+                board.setHighLight();
+            } else {
+                if (Move.isInAvailablePositionList(board.realBoard.availableMove, clickedSquare.coordinateOfButton)) {
+                    board.realBoard.upDate(board.realBoard.selectedPiece.coordinate, clickedSquare.coordinateOfButton);
+                    board.boardUpdate(board.start.coordinateOfButton, clickedSquare.coordinateOfButton);
+                    board.realBoard.turn++;
+                }
+
+                board.removeHighLight();
+                board.realBoard.availableMove = new LinkedList();
+                board.realBoard.selectedPiece = null;
+                board.start = null;
+            }
         }
     }
 }
