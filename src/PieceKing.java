@@ -11,48 +11,44 @@ public class PieceKing extends Piece {
     }
 
     @Override
-    public void findAvailablePosition(Board board) {
-        Move temp = new Move(this.coordinate);
+    public Move findAvailablePosition(Board board) {
+        Move temp;
 
         // move to east
-        temp.moveToEast();
+        temp = new Move(board.moveToEast(this.coordinate));
         isValidPosition(temp, board);
 
-
         // move to west
-        temp = new Move(this.coordinate);
-        temp.moveToWest();
+        temp = new Move(board.moveToWest(this.coordinate));
         isValidPosition(temp, board);
 
         // move to north
-        temp = new Move(this.coordinate);
-        temp.moveToNorth();
+        temp = new Move(board.moveToNorth(this.coordinate));
         isValidPosition(temp, board);
 
+
         // move to northeast
-        temp = new Move(this.coordinate);
-        temp.moveToNorthEast();
+        temp = new Move(board.moveToNorthEast(this.coordinate));
         isValidPosition(temp, board);
 
         // move to northWest
-        temp = new Move(this.coordinate);
-        temp.moveToNorthWest();
+        temp = new Move(board.moveToNorthWest(this.coordinate));
         isValidPosition(temp, board);
 
         // move to south
-        temp = new Move(this.coordinate);
-        temp.moveToSouth();
+        temp = new Move(board.moveToSouth(this.coordinate));
         isValidPosition(temp, board);
 
+
         // move to southWest
-        temp = new Move(this.coordinate);
-        temp.moveToSouthWest();
+        temp = new Move(board.moveToSouthWest(this.coordinate));
         isValidPosition(temp, board);
 
         // move to southeast
-        temp = new Move(this.coordinate);
-        temp.moveToSouthEast();
+        temp = new Move(board.moveToSouthEast(this.coordinate));
         isValidPosition(temp, board);
+
+        return board.availableMove.peek();
     }
 }
 

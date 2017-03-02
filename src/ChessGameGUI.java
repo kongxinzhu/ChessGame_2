@@ -92,7 +92,7 @@ public class ChessGameGUI extends JFrame implements ActionListener {
                 }
             } else {
                 if (Move.isInAvailablePositionList(board.realBoard.availableMove, clickedSquare.coordinateOfButton)) {
-                    board.realBoard.upDate(clickedSquare.coordinateOfButton);
+                    board.realBoard.upDatePieceInAlivePieces(clickedSquare.coordinateOfButton);
                     board.boardUpdate(board.start.coordinateOfButton, clickedSquare.coordinateOfButton);
                     board.realBoard.turn++;
                 }

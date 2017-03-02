@@ -11,32 +11,29 @@ public class PiecePawn extends Piece {
     }
 
     @Override
-    public void findAvailablePosition(Board board) {
-        Move temp = new Move(this.coordinate);
+    public Move findAvailablePosition(Board board) {
+        Move temp;
 
         // white
         if (color == WHITE) {
-            temp.moveToNorth();
+            temp = new Move(board.moveToNorth(this.coordinate));
             boolean added = isValidPosition(temp, board);
 
             // check if it's the first movement of this pawn
-            if (added && temp.row == 5 && temp.captureOpposite == false) {
-                temp = new Move(temp.row, temp.col, false);
-                temp.moveToNorth();
+            if (added && temp.coordinate.row == 5 && temp.captureOpposite == false) {
+                temp = new Move(board.moveToNorth(temp.coordinate));
                 isValidPosition(temp, board);
             }
 
             // check if there is any opposite's piece in the valid range of this pawn
-            temp = new Move(this.coordinate);
-            temp.moveToNorthWest();
-            if (temp.inBoard() && board.alivePieces.containsKey(temp) && board.alivePieces.get(temp).color != this.color) {
+            temp = new Move(board.moveToNorthWest(this.coordinate));
+            if (temp != null && board.alivePieces.containsKey(temp) && board.alivePieces.get(temp).color != this.color) {
                 temp.captureOpposite = true;
                 board.availableMove.add(temp);
             }
 
-            temp = new Move(this.coordinate);
-            temp.moveToNorthEast();
-            if (temp.inBoard() && board.alivePieces.containsKey(temp) && board.alivePieces.get(temp).color != this.color) {
+            temp = new Move(board.moveToNorthEast(this.coordinate));
+            if (temp != null && board.alivePieces.containsKey(temp) && board.alivePieces.get(temp).color != this.color) {
                 temp.captureOpposite = true;
                 board.availableMove.add(temp);
             }
@@ -45,39 +42,36 @@ public class PiecePawn extends Piece {
 
         // move to west
         if (color == BLACK) {
-            temp.moveToSouth();
+            temp = new Move(board.moveToSouth(this.coordinate));
             boolean added = isValidPosition(temp, board);
 
             // check if it's the first movement of this pawn
-            if (added && temp.row == 2 && temp.captureOpposite == false) {
-                temp = new Move(temp.row, temp.col, false);
-                temp.moveToSouth();
+            if (added && temp.coordinate.row == 2 && temp.captureOpposite == false) {
+                temp = new Move(board.moveToSouth(temp.coordinate));
                 isValidPosition(temp, board);
             }
 
             // check if there is any opposite's piece in the valid range of this pawn
-            temp = new Move(this.coordinate);
-            temp.moveToSouthWest();
-            if (temp.inBoard() && board.alivePieces.containsKey(temp) && board.alivePieces.get(temp).color != this.color) {
+            temp = new Move(board.moveToSouthWest(this.coordinate));
+            if (temp != null && board.alivePieces.containsKey(temp) && board.alivePieces.get(temp).color != this.color) {
                 temp.captureOpposite = true;
                 board.availableMove.add(temp);
             }
 
-            temp = new Move(this.coordinate);
-            temp.moveToSouthEast();
-            if (temp.inBoard() && board.alivePieces.containsKey(temp) && board.alivePieces.get(temp).color != this.color) {
+            temp = new Move(board.moveToSouthEast(this.coordinate));
+            if (temp != null && board.alivePieces.containsKey(temp) && board.alivePieces.get(temp).color != this.color) {
                 temp.captureOpposite = true;
                 board.availableMove.add(temp);
             }
         }
 
-
+        return board.availableMove.peek();
     }
 
     @Override
     public boolean isValidPosition(Move move, Board board) {
         boolean added = false;
-        if (move.inBoard() && !board.alivePieces.containsKey(move)) {
+        if (move.coordinate != board.OUTOFBOARD && !board.alivePieces.containsKey(move.coordinate)) {
             board.availableMove.add(move);
             added = true;
         }

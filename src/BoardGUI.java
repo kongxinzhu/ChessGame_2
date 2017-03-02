@@ -76,11 +76,7 @@ public class BoardGUI extends JPanel {
 
     // update the icon on chess board in GUI
     public void boardUpdate(Coordinate start, Coordinate end) {
-
-        int startRow = start.row;
-        int startCol = start.col;
-
-        buttons[startRow][startCol].setIcon(null);
+        buttons[start.row][start.col].setIcon(null);
         imageOfPiece = new ImageIcon(getClass().getResource(realBoard.alivePieces.get(end).imagePath));
         buttons[realBoard.alivePieces.get(end).coordinate.row][realBoard.alivePieces.get(end).coordinate.col].setIcon(imageOfPiece);
     }
@@ -89,11 +85,11 @@ public class BoardGUI extends JPanel {
     public void setHighLight() {
         if (realBoard.availableMove.size() != 0) {
             Move move = realBoard.availableMove.peek();
-            Color destination = buttons[move.row][move.col].getBackground();
+            Color destination = buttons[move.coordinate.row][move.coordinate.col].getBackground();
             Color start = buttons[realBoard.selectedPiece.coordinate.row][realBoard.selectedPiece.coordinate.col].getBackground();
             originalSquareColor.add(destination);
             originalSquareColor.add(start);
-            buttons[move.row][move.col].setBackground(Color.YELLOW);
+            buttons[move.coordinate.row][move.coordinate.col].setBackground(Color.YELLOW);
             buttons[realBoard.selectedPiece.coordinate.row][realBoard.selectedPiece.coordinate.col].setBackground(Color.YELLOW);
         }
     }
@@ -106,7 +102,7 @@ public class BoardGUI extends JPanel {
             destinationColor = originalSquareColor.pop();
             startColor = originalSquareColor.pop();
             move = realBoard.availableMove.pop();
-            buttons[move.row][move.col].setBackground(destinationColor);
+            buttons[move.coordinate.row][move.coordinate.col].setBackground(destinationColor);
             buttons[start.coordinateOfButton.row][start.coordinateOfButton.col].setBackground(startColor);
         }
     }

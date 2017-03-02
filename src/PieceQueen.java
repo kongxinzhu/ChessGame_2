@@ -11,71 +11,56 @@ public class PieceQueen extends Piece {
     }
 
     @Override
-    public void findAvailablePosition(Board board) {
-        Move temp = new Move(this.coordinate);
-
+    public Move findAvailablePosition(Board board) {
         // move to east
-        temp.moveToEast();
+        Move temp = new Move(board.moveToEast(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(temp);
-            temp.moveToEast();
+            temp = new Move(board.moveToEast(temp.coordinate));
         }
 
         // move to west
-        temp = new Move(this.coordinate);
-        temp.moveToWest();
+        temp = new Move(board.moveToWest(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(temp);
-            temp.moveToWest();
+            temp = new Move(board.moveToWest(temp.coordinate));
         }
 
         // move to north
-        temp = new Move(this.coordinate);
-        temp.moveToNorth();
+        temp = new Move(board.moveToNorth(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(temp);
-            temp.moveToNorth();
+            temp = new Move(board.moveToNorth(temp.coordinate));
         }
 
         // move to northeast
-        temp = new Move(this.coordinate);
-        temp.moveToNorthEast();
+        temp = new Move(board.moveToNorthEast(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(temp);
-            temp.moveToNorthEast();
+            temp = new Move(board.moveToNorthEast(temp.coordinate));
         }
 
         // move to northWest
-        temp = new Move(this.coordinate);
-        temp.moveToNorthWest();
+        temp = new Move(board.moveToNorthWest(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(temp);
-            temp.moveToNorthWest();
+            temp = new Move(board.moveToNorthWest(temp.coordinate));
         }
 
         // move to south
-        temp = new Move(this.coordinate);
-        temp.moveToSouth();
+        temp = new Move(board.moveToSouth(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(temp);
-            temp.moveToSouth();
+            temp = new Move(board.moveToSouth(temp.coordinate));
         }
 
         // move to southWest
-        temp = new Move(this.coordinate);
-        temp.moveToSouthWest();
+        temp = new Move(board.moveToSouthWest(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(temp);
-            temp.moveToSouthWest();
+            temp = new Move(board.moveToSouthWest(temp.coordinate));
         }
 
         // move to southeast
-        temp = new Move(this.coordinate);
-        temp.moveToSouthEast();
+        temp = new Move(board.moveToSouthEast(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(temp);
-            temp.moveToSouthEast();
+            temp = new Move(board.moveToSouthEast(temp.coordinate));
         }
+
+        return board.availableMove.peek();
     }
 }
 

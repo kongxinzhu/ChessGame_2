@@ -4,30 +4,29 @@ import java.util.LinkedList;
 /**
  * Created by caixinzhu on 2/23/17.
  */
-public class Move extends Coordinate {
+public class Move {
+    Coordinate coordinate;
     boolean captureOpposite;
 
-    public Move(int row, int col, boolean captureOpposite) {
-        super(row, col);
+    public Move(Coordinate coordinate, boolean captureOpposite) {
+        this.coordinate = coordinate;
         this.captureOpposite = captureOpposite;
     }
 
     public Move(Coordinate coordinate) {
-        super(coordinate.row, coordinate.col);
+        this.coordinate = coordinate;
         this.captureOpposite = false;
     }
 
+
     public static boolean isInAvailablePositionList(LinkedList<Move> moveList, Coordinate coordinate) {
         for(Move move : moveList) {
-            if(move.row == coordinate.row && move.col == coordinate.col) {
+            if(move.coordinate == coordinate) {
                 return true;
             }
         }
         return false;
     }
 
-    @Override
-    public String toString() {
-        return this.row + " " + this.col + " " + this.captureOpposite;
-    }
+
 }

@@ -7,41 +7,36 @@ public class PieceRook extends Piece {
         super(pieceName, pieceImagePath, pieceColor, pieceCoordinate);
     }
     @Override
-    public void findAvailablePosition(Board board) {
+    public Move findAvailablePosition(Board board) {
 
-        Move temp = new Move(this.coordinate);
+        Move temp = new Move(board.moveToEast(this.coordinate));
 
         // move to east
-        temp.moveToEast();
         while (isValidPosition(temp, board)) {
-            temp = new Move(temp);
-            temp.moveToEast();
+            temp = new Move(board.moveToEast(temp.coordinate));
         }
 
         // move to west
-        temp = new Move(this.coordinate);
-        temp.moveToWest();
+        temp = new Move(board.moveToWest(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(temp);
-            temp.moveToWest();
+            temp = new Move(board.moveToWest(temp.coordinate));
         }
 
         // move to north
-        temp = new Move(this.coordinate);
-        temp.moveToNorth();
+        temp = new Move(board.moveToNorth(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(temp);
-            temp.moveToNorth();
+            temp = new Move(board.moveToNorth(temp.coordinate));
         }
 
         // move to south
-        temp = new Move(this.coordinate);
-        temp.moveToSouth();
+        temp = new Move(board.moveToSouth(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(temp);
-            temp.moveToSouth();
+            temp = new Move(board.moveToSouth(temp.coordinate));
         }
+
+        return board.availableMove.peek();
     }
+
 }
 
 

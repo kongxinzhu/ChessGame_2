@@ -4,7 +4,7 @@ import java.util.LinkedList;
 /**
  * Created by caixinzhu on 2/23/17.
  */
-public abstract class Piece {
+public abstract class Piece{
     static final int BLACK = 0;
     static final int WHITE = 1;
     String name;
@@ -22,12 +22,12 @@ public abstract class Piece {
 
     public boolean isValidPosition(Move move, Board board){
         boolean added = false;
-        if(move.inBoard()) {
-            if(board.alivePieces.containsKey(new Coordinate(move.row,move.col)) && board.alivePieces.get(new Coordinate(move.row,move.col)).color != board.selectedPiece.color) {
+        if(move.coordinate != board.OUTOFBOARD) {
+            if(board.alivePieces.containsKey(move.coordinate) && board.alivePieces.get(move.coordinate).color != board.selectedPiece.color) {
                 move.captureOpposite = true;
                 board.availableMove.add(move);
                 added = true;
-            } else if(!board.alivePieces.containsKey(new Coordinate(move.row,move.col))) {
+            } else if(!board.alivePieces.containsKey(move.coordinate)) {
                 board.availableMove.add(move);
                 added = true;
             }
@@ -35,8 +35,9 @@ public abstract class Piece {
         return added;
     }
 
-    public abstract void findAvailablePosition(Board board);
+
+    public abstract Move findAvailablePosition(Board board);
     public void upDateCoordinate(Coordinate newCoordinate) {
-        this.coordinate = newCoordinate;
+        coordinate = newCoordinate;
     }
 }
