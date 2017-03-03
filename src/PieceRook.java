@@ -9,29 +9,29 @@ public class PieceRook extends Piece {
     @Override
     public Move findAvailablePosition(Board board) {
 
-        Move temp = new Move(board.moveToEast(this.coordinate));
+        Move temp = new Move(this.coordinate, board.moveToEast(this.coordinate));
 
         // move to east
         while (isValidPosition(temp, board)) {
-            temp = new Move(board.moveToEast(temp.coordinate));
+            temp = new Move(this.coordinate, board.moveToEast(temp.endCoordinate));
         }
 
         // move to west
-        temp = new Move(board.moveToWest(this.coordinate));
+        temp = new Move(this.coordinate, board.moveToWest(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(board.moveToWest(temp.coordinate));
+            temp = new Move(this.coordinate, board.moveToWest(temp.endCoordinate));
         }
 
         // move to north
-        temp = new Move(board.moveToNorth(this.coordinate));
+        temp = new Move(this.coordinate, board.moveToNorth(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(board.moveToNorth(temp.coordinate));
+            temp = new Move(this.coordinate, board.moveToNorth(temp.endCoordinate));
         }
 
         // move to south
-        temp = new Move(board.moveToSouth(this.coordinate));
+        temp = new Move(this.coordinate, board.moveToSouth(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(board.moveToSouth(temp.coordinate));
+            temp = new Move(this.coordinate, board.moveToSouth(temp.endCoordinate));
         }
 
         return board.availableMove.peek();

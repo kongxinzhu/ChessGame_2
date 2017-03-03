@@ -11,33 +11,32 @@ public class PieceBishop extends Piece {
 
     @Override
     public Move findAvailablePosition(Board board) {
-        Move temp = new Move(board.moveToNorthEast(this.coordinate));
+        Move temp;
 
         // move to northEast
+        temp = new Move(this.coordinate, board.moveToNorthEast(this.coordinate));
         while (isValidPosition(temp, board) && !temp.captureOpposite) {
-            temp = new Move(board.moveToNorthEast(temp.coordinate));
+            temp = new Move(this.coordinate,board.moveToNorthEast(temp.endCoordinate));
         }
 
         // move to northWest
-        temp = new Move(board.moveToNorthWest(this.coordinate));
+        temp = new Move(this.coordinate, board.moveToNorthWest(this.coordinate));
         while (isValidPosition(temp, board) && !temp.captureOpposite) {
-            temp = new Move(board.moveToNorthWest(temp.coordinate));
+            temp = new Move(this.coordinate, board.moveToNorthWest(temp.endCoordinate));
         }
 
         // move to southWest
-        temp = new Move(board.moveToSouthWest(this.coordinate));
+        temp = new Move(this.coordinate, board.moveToSouthWest(this.coordinate));
         while (isValidPosition(temp, board) && !temp.captureOpposite) {
-            temp = new Move(board.moveToSouthWest(temp.coordinate));
+            temp = new Move(this.coordinate, board.moveToSouthWest(temp.endCoordinate));
         }
 
         // move to southEast
-        temp = new Move(board.moveToSouthEast(this.coordinate));
+        temp = new Move(this.coordinate, board.moveToSouthEast(this.coordinate));
         while (isValidPosition(temp, board) && !temp.captureOpposite) {
-            temp = new Move(board.moveToSouthEast(temp.coordinate));
+            temp = new Move(this.coordinate, board.moveToSouthEast(temp.endCoordinate));
         }
 
         return board.availableMove.peek();
     }
 }
-
-

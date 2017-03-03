@@ -4,16 +4,20 @@ import java.util.*;
  * Piece's place is changed following MoveList which shows which piece and where it goes
  */
 
-public class Board {
+public class Board
+//        implements Runnable
+{
     static final int BLACK = 0;
     static final int WHITE = 1;
+
+    // coordinate which is out of board
     static final Coordinate OUTOFBOARD = new Coordinate(-1, -1);
 
     // 64 coordinates on board
     Coordinate[][] coordinates;
 
-    // coordinate which is out of board
-
+    // hint
+    Hint hint;
 
     // valid selected piece
     Piece selectedPiece;
@@ -38,7 +42,7 @@ public class Board {
             }
         }
 
-
+        hint = new Hint(this);
         alivePieces = new HashMap<>();
 
         // initialize the beginning state of game and store all in alive pieces' list
@@ -84,36 +88,7 @@ public class Board {
     // by specific required order
     public void setAvailableMove() {
         selectedPiece.findAvailablePosition(this);
-        Collections.sort(availableMove, new Comparator<Move>() {
-            @Override
-            public int compare(Move m1, Move m2) {
-                int res = 0;
-                if (m1.captureOpposite != m2.captureOpposite) {
-                    res = m1.captureOpposite == false ? 1 : -1;
-                }
-                if (res == 0) {
-                    if (m1.coordinate.col == m2.coordinate.col) res = 0;
-                    else if (turn % 2 == 1) res = m1.coordinate.col < m2.coordinate.col ? 1 : -1;
-                    else if (turn % 2 == 0) res = m1.coordinate.col > m2.coordinate.col ? 1 : -1;
-                }
-                if (res == 0) {
-                    if (m1.coordinate.row == m2.coordinate.row) res = 0;
-                    else if (turn % 2 == 1) res = m1.coordinate.row > m2.coordinate.row ? 1 : -1;
-                    else if (turn % 2 == 0) res = m1.coordinate.row < m2.coordinate.row ? 1 : -1;
-                }
-                if (res == 0) {
-                    if (m1.coordinate.col == m2.coordinate.col) res = 0;
-                    else if (turn % 2 == 1) res = m1.coordinate.col > m2.coordinate.col ? 1 : -1;
-                    else if (turn % 2 == 0) res = m1.coordinate.col < m2.coordinate.col ? 1 : -1;
-                }
-                if (res == 0) {
-                    if (m1.coordinate.row == m2.coordinate.row) res = 0;
-                    else if (turn % 2 == 1) res = m1.coordinate.row < m2.coordinate.row ? 1 : -1;
-                    else if (turn % 2 == 0) res = m1.coordinate.row > m2.coordinate.row ? 1 : -1;
-                }
-                return res;
-            }
-        });
+        Collections.sort(availableMove, new MoveComparator(this));
     }
 
     // get the corresponding coordinate in coordinates array by row and col
@@ -138,7 +113,7 @@ public class Board {
         int row = coordinate.row;
         int col = coordinate.col - 1;
         Coordinate returnCoordinate = null;
-        if (new Coordinate(row,col).inBoard() && coordinate != OUTOFBOARD) {
+        if (new Coordinate(row, col).inBoard() && coordinate != OUTOFBOARD) {
             returnCoordinate = getCoordinate(row, col);
         } else {
             returnCoordinate = OUTOFBOARD;
@@ -150,7 +125,7 @@ public class Board {
         int row = coordinate.row - 1;
         int col = coordinate.col - 1;
         Coordinate returnCoordinate = null;
-        if (new Coordinate(row,col).inBoard() && coordinate != OUTOFBOARD) {
+        if (new Coordinate(row, col).inBoard() && coordinate != OUTOFBOARD) {
             returnCoordinate = getCoordinate(row, col);
         } else {
             returnCoordinate = OUTOFBOARD;
@@ -162,7 +137,7 @@ public class Board {
         int row = coordinate.row - 1;
         int col = coordinate.col;
         Coordinate returnCoordinate = null;
-        if (new Coordinate(row,col).inBoard() && coordinate != OUTOFBOARD) {
+        if (new Coordinate(row, col).inBoard() && coordinate != OUTOFBOARD) {
             returnCoordinate = getCoordinate(row, col);
         } else {
             returnCoordinate = OUTOFBOARD;
@@ -174,7 +149,7 @@ public class Board {
         int row = coordinate.row - 1;
         int col = coordinate.col + 1;
         Coordinate returnCoordinate = null;
-        if (new Coordinate(row,col).inBoard() && coordinate != OUTOFBOARD) {
+        if (new Coordinate(row, col).inBoard() && coordinate != OUTOFBOARD) {
             returnCoordinate = getCoordinate(row, col);
         } else {
             returnCoordinate = OUTOFBOARD;
@@ -186,7 +161,7 @@ public class Board {
         int row = coordinate.row;
         int col = coordinate.col + 1;
         Coordinate returnCoordinate = null;
-        if (new Coordinate(row,col).inBoard() && coordinate != OUTOFBOARD) {
+        if (new Coordinate(row, col).inBoard() && coordinate != OUTOFBOARD) {
             returnCoordinate = getCoordinate(row, col);
         } else {
             returnCoordinate = OUTOFBOARD;
@@ -198,7 +173,7 @@ public class Board {
         int row = coordinate.row + 1;
         int col = coordinate.col + 1;
         Coordinate returnCoordinate = null;
-        if (new Coordinate(row,col).inBoard() && coordinate != OUTOFBOARD) {
+        if (new Coordinate(row, col).inBoard() && coordinate != OUTOFBOARD) {
             returnCoordinate = getCoordinate(row, col);
         } else {
             returnCoordinate = OUTOFBOARD;
@@ -210,7 +185,7 @@ public class Board {
         int row = coordinate.row + 1;
         int col = coordinate.col;
         Coordinate returnCoordinate = null;
-        if (new Coordinate(row,col).inBoard() && coordinate != OUTOFBOARD) {
+        if (new Coordinate(row, col).inBoard() && coordinate != OUTOFBOARD) {
             returnCoordinate = getCoordinate(row, col);
         } else {
             returnCoordinate = OUTOFBOARD;
@@ -222,11 +197,21 @@ public class Board {
         int row = coordinate.row + 1;
         int col = coordinate.col - 1;
         Coordinate returnCoordinate = null;
-        if (new Coordinate(row,col).inBoard() && coordinate != OUTOFBOARD) {
+        if (new Coordinate(row, col).inBoard() && coordinate != OUTOFBOARD) {
             returnCoordinate = getCoordinate(row, col);
         } else {
             returnCoordinate = OUTOFBOARD;
         }
         return returnCoordinate;
     }
+
+//    @Override
+    public void getHint() {
+        for (Piece p : this.alivePieces.values()) {
+            Move temp = p.findAvailablePosition(this);
+            if (temp != null) hint.hintPositionList.add(temp);
+        }
+
+    }
+
 }

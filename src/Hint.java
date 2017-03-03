@@ -1,19 +1,22 @@
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Created by caixinzhu on 3/2/17.
  */
-public class Hint implements Runnable {
-    ArrayList<Thread> threads;
-    HashMap<Piece, Move> hint;
+public class Hint {
+    LinkedList<Move> hintPositionList;
     Board board;
 
-    @Override
-    public void run() {
+    public Hint(Board board) {
+        this.board = board;
+        hintPositionList = new LinkedList();
+    }
+
+    public Move calculateHint() {
         for(Piece p : board.alivePieces.values()) {
-            Move temp  = p.findAvailablePosition(board);
-            if(temp != null)  hint.put(p, temp);
+            hintPositionList.add(p.findAvailablePosition(board));
         }
+        Collections.sort(hintPositionList, new MoveComparator(board));
+        return hintPositionList.peek();
     }
 }

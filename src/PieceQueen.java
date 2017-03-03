@@ -13,51 +13,51 @@ public class PieceQueen extends Piece {
     @Override
     public Move findAvailablePosition(Board board) {
         // move to east
-        Move temp = new Move(board.moveToEast(this.coordinate));
+        Move temp = new Move(this.coordinate, board.moveToEast(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(board.moveToEast(temp.coordinate));
+            temp = new Move(this.coordinate, board.moveToEast(temp.endCoordinate));
         }
 
         // move to west
-        temp = new Move(board.moveToWest(this.coordinate));
+        temp = new Move(this.coordinate, board.moveToWest(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(board.moveToWest(temp.coordinate));
+            temp = new Move(this.coordinate, board.moveToWest(temp.endCoordinate));
         }
 
         // move to north
-        temp = new Move(board.moveToNorth(this.coordinate));
+        temp = new Move(this.coordinate, board.moveToNorth(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(board.moveToNorth(temp.coordinate));
+            temp = new Move(this.coordinate, board.moveToNorth(temp.endCoordinate));
         }
 
         // move to northeast
-        temp = new Move(board.moveToNorthEast(this.coordinate));
+        temp = new Move(this.coordinate, board.moveToNorthEast(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(board.moveToNorthEast(temp.coordinate));
+            temp = new Move(this.coordinate, board.moveToNorthEast(temp.endCoordinate));
         }
 
         // move to northWest
-        temp = new Move(board.moveToNorthWest(this.coordinate));
+        temp = new Move(this.coordinate, board.moveToNorthWest(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(board.moveToNorthWest(temp.coordinate));
+            temp = new Move(this.coordinate, board.moveToNorthWest(temp.endCoordinate));
         }
 
         // move to south
-        temp = new Move(board.moveToSouth(this.coordinate));
+        temp = new Move(this.coordinate, board.moveToSouth(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(board.moveToSouth(temp.coordinate));
+            temp = new Move(this.coordinate, board.moveToSouth(temp.endCoordinate));
         }
 
         // move to southWest
-        temp = new Move(board.moveToSouthWest(this.coordinate));
+        temp = new Move(this.coordinate, board.moveToSouthWest(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(board.moveToSouthWest(temp.coordinate));
+            temp = new Move(this.coordinate, board.moveToSouthWest(temp.endCoordinate));
         }
 
         // move to southeast
-        temp = new Move(board.moveToSouthEast(this.coordinate));
+        temp = new Move(this.coordinate, board.moveToSouthEast(this.coordinate));
         while (isValidPosition(temp, board)) {
-            temp = new Move(board.moveToSouthEast(temp.coordinate));
+            temp = new Move(this.coordinate, board.moveToSouthEast(temp.endCoordinate));
         }
 
         return board.availableMove.peek();

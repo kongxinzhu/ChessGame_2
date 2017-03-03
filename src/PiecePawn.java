@@ -16,23 +16,23 @@ public class PiecePawn extends Piece {
 
         // white
         if (color == WHITE) {
-            temp = new Move(board.moveToNorth(this.coordinate));
+            temp = new Move(this.coordinate, board.moveToNorth(this.coordinate));
             boolean added = isValidPosition(temp, board);
 
             // check if it's the first movement of this pawn
-            if (added && temp.coordinate.row == 5 && temp.captureOpposite == false) {
-                temp = new Move(board.moveToNorth(temp.coordinate));
+            if (added && temp.startCoordinate.row == 6 && temp.captureOpposite == false) {
+                temp = new Move(this.coordinate,board.moveToNorth(temp.endCoordinate));
                 isValidPosition(temp, board);
             }
 
             // check if there is any opposite's piece in the valid range of this pawn
-            temp = new Move(board.moveToNorthWest(this.coordinate));
+            temp = new Move(this.coordinate, board.moveToNorthWest(this.coordinate));
             if (temp != null && board.alivePieces.containsKey(temp) && board.alivePieces.get(temp).color != this.color) {
                 temp.captureOpposite = true;
                 board.availableMove.add(temp);
             }
 
-            temp = new Move(board.moveToNorthEast(this.coordinate));
+            temp = new Move(this.coordinate,board.moveToNorthEast(this.coordinate));
             if (temp != null && board.alivePieces.containsKey(temp) && board.alivePieces.get(temp).color != this.color) {
                 temp.captureOpposite = true;
                 board.availableMove.add(temp);
@@ -42,23 +42,23 @@ public class PiecePawn extends Piece {
 
         // move to west
         if (color == BLACK) {
-            temp = new Move(board.moveToSouth(this.coordinate));
+            temp = new Move(this.coordinate, board.moveToSouth(this.coordinate));
             boolean added = isValidPosition(temp, board);
 
             // check if it's the first movement of this pawn
-            if (added && temp.coordinate.row == 2 && temp.captureOpposite == false) {
-                temp = new Move(board.moveToSouth(temp.coordinate));
+            if (added && temp.startCoordinate.row == 1 && temp.captureOpposite == false) {
+                temp = new Move(this.coordinate,board.moveToSouth(temp.endCoordinate));
                 isValidPosition(temp, board);
             }
 
             // check if there is any opposite's piece in the valid range of this pawn
-            temp = new Move(board.moveToSouthWest(this.coordinate));
+            temp = new Move(this.coordinate, board.moveToSouthWest(this.coordinate));
             if (temp != null && board.alivePieces.containsKey(temp) && board.alivePieces.get(temp).color != this.color) {
                 temp.captureOpposite = true;
                 board.availableMove.add(temp);
             }
 
-            temp = new Move(board.moveToSouthEast(this.coordinate));
+            temp = new Move(this.coordinate, board.moveToSouthEast(this.coordinate));
             if (temp != null && board.alivePieces.containsKey(temp) && board.alivePieces.get(temp).color != this.color) {
                 temp.captureOpposite = true;
                 board.availableMove.add(temp);
@@ -71,7 +71,7 @@ public class PiecePawn extends Piece {
     @Override
     public boolean isValidPosition(Move move, Board board) {
         boolean added = false;
-        if (move.coordinate != board.OUTOFBOARD && !board.alivePieces.containsKey(move.coordinate)) {
+        if (move.endCoordinate != board.OUTOFBOARD && !board.alivePieces.containsKey(move.endCoordinate)) {
             board.availableMove.add(move);
             added = true;
         }

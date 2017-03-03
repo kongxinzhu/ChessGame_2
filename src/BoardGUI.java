@@ -85,12 +85,12 @@ public class BoardGUI extends JPanel {
     public void setHighLight() {
         if (realBoard.availableMove.size() != 0) {
             Move move = realBoard.availableMove.peek();
-            Color destination = buttons[move.coordinate.row][move.coordinate.col].getBackground();
+            Color destination = buttons[move.endCoordinate.row][move.endCoordinate.col].getBackground();
             Color start = buttons[realBoard.selectedPiece.coordinate.row][realBoard.selectedPiece.coordinate.col].getBackground();
             originalSquareColor.add(destination);
             originalSquareColor.add(start);
-            buttons[move.coordinate.row][move.coordinate.col].setBackground(Color.YELLOW);
-            buttons[realBoard.selectedPiece.coordinate.row][realBoard.selectedPiece.coordinate.col].setBackground(Color.YELLOW);
+            buttons[move.endCoordinate.row][move.endCoordinate.col].setBackground(Color.YELLOW);
+            buttons[move.startCoordinate.row][move.startCoordinate.col].setBackground(Color.YELLOW);
         }
     }
 
@@ -102,7 +102,7 @@ public class BoardGUI extends JPanel {
             destinationColor = originalSquareColor.pop();
             startColor = originalSquareColor.pop();
             move = realBoard.availableMove.pop();
-            buttons[move.coordinate.row][move.coordinate.col].setBackground(destinationColor);
+            buttons[move.endCoordinate.row][move.endCoordinate.col].setBackground(destinationColor);
             buttons[start.coordinateOfButton.row][start.coordinateOfButton.col].setBackground(startColor);
         }
     }
