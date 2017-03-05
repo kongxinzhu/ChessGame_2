@@ -1,7 +1,12 @@
 import java.util.*;
 /*
  * Board is back-end of this program
- * Piece's place is changed following MoveList which shows which piece and where it goes
+ *
+ * board instance has an array of Coordinate
+ * there is a hashmap named alivePieces in order to store current alive piece on the board
+ * it stores the coordinate and piece in this hashmap
+ *
+ *
  */
 
 public class Board
@@ -16,11 +21,8 @@ public class Board
     // 64 coordinates on board
     Coordinate[][] coordinates;
 
-    // hint
-    Hint hint;
-
     // valid selected piece
-    Piece selectedPiece;
+    boolean isSelected;
 
     // Alive piece list on the board
     HashMap<Coordinate, Piece> alivePieces;
@@ -42,7 +44,6 @@ public class Board
             }
         }
 
-        hint = new Hint(this);
         alivePieces = new HashMap<>();
 
         // initialize the beginning state of game and store all in alive pieces' list
@@ -80,15 +81,14 @@ public class Board
         turn = 1;
     }
 
-    public void setSelectedPiece(Piece selectedPiece) {
-        this.selectedPiece = selectedPiece;
-    }
+//    public void setSelectedPiece(Piece selectedPiece) {
+//        this.selectedPiece = selectedPiece;
+//    }
 
     // set available move position list
     // by specific required order
-    public void setAvailableMove() {
+    public void setAvailableMove(Piece selectedPiece) {
         selectedPiece.findAvailablePosition(this);
-        Collections.sort(availableMove, new MoveComparator(this));
     }
 
     // get the corresponding coordinate in coordinates array by row and col
@@ -99,10 +99,11 @@ public class Board
         } else return null;
     }
 
-    public void upDatePieceInAlivePieces(Coordinate end) {
-        Coordinate start = this.selectedPiece.coordinate;
-        this.selectedPiece.upDateCoordinate(end);
-        alivePieces.put(end, this.selectedPiece);
+    public void upDatePieceInAlivePieces(Move move) {
+        Coordinate start = move.startCoordinate;
+        Piece selectedPiece = this.alivePieces.get(start);
+        selectedPiece.upDateCoordinate(move.endCoordinate);
+        alivePieces.put(move.endCoordinate, selectedPiece);
         alivePieces.remove(start);
     }
 
@@ -205,13 +206,28 @@ public class Board
         return returnCoordinate;
     }
 
-//    @Override
-    public void getHint() {
-        for (Piece p : this.alivePieces.values()) {
-            Move temp = p.findAvailablePosition(this);
-            if (temp != null) hint.hintPositionList.add(temp);
+    public boolean isInAvailablePositionList(Coordinate coordinate) {
+        if(this.availableMove.size() != 0) {
+            for (Move move : this.availableMove) {
+                if (move.endCoordinate == coordinate) {
+                    return true;
+                }
+            }
         }
-
+        return false;
     }
 
+    public Move calculateHint() {
+        LinkedList<Move> hintPositionList = new LinkedList<>();
+        for (Piece p : this.alivePieces.values()) {
+            if (this.turn % 2 == p.color) {
+                Move move = p.findAvailablePosition(this);
+                if (move != null) {
+                    hintPositionList.add(move);
+                }
+            }
+        }
+        Collections.sort(hintPositionList, new MoveComparator(this));
+        return hintPositionList.peek();
+    }
 }

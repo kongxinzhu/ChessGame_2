@@ -67,7 +67,9 @@ public class ChessGameGUI extends JFrame implements ActionListener {
         Object source = e.getSource();
 
         if (source == hint) {
-            board.setHighLight();
+            Move hintMove = board.realBoard.calculateHint();
+            board.setHighLight(hintMove);
+            board.highLight = !board.highLight;
         }
         // refresh the board
         else if (source == refresh) {
@@ -78,29 +80,29 @@ public class ChessGameGUI extends JFrame implements ActionListener {
             board.addActionListener(this);
             boardPanel.add(board);
         } else {
+            if(board.highLight) {
+                board.removeHighLight();
+                board.highLight = false;
+            }
             SquareOfBoard clickedSquare = (SquareOfBoard) source;
             Piece targetPiece = board.realBoard.alivePieces.get(clickedSquare.coordinateOfButton);
 
             // check if it's right turn
-            if (targetPiece != null && targetPiece.color == board.realBoard.turn % 2 && board.realBoard.selectedPiece == null) {
-                board.start = clickedSquare;
-                board.realBoard.setSelectedPiece(targetPiece);
-                board.realBoard.setAvailableMove();
-                if(board.realBoard.availableMove.size() == 0) {
-                    board.realBoard.setSelectedPiece(null);
-                    board.start = null;
-                }
+            if (targetPiece != null && targetPiece.color == board.realBoard.turn % 2 && !board.realBoard.isSelected) {
+                Piece selectedPiece = board.realBoard.alivePieces.get(clickedSquare.coordinateOfButton);
+                board.realBoard.isSelected = true;
+                selectedPiece.findAvailablePosition(board.realBoard);
+
             } else {
-                if (Move.isInAvailablePositionList(board.realBoard.availableMove, clickedSquare.coordinateOfButton)) {
-                    board.realBoard.upDatePieceInAlivePieces(clickedSquare.coordinateOfButton);
-                    board.boardUpdate(board.start.coordinateOfButton, clickedSquare.coordinateOfButton);
+                if (board.realBoard.isInAvailablePositionList(clickedSquare.coordinateOfButton)) {
+                    Move move = new Move(board.realBoard.availableMove.peek().startCoordinate, clickedSquare.coordinateOfButton);
+                    board.realBoard.upDatePieceInAlivePieces(move);
+                    board.boardUpdate(move);
                     board.realBoard.turn++;
                 }
 
-                board.removeHighLight();
                 board.realBoard.availableMove = new LinkedList();
-                board.realBoard.selectedPiece = null;
-                board.start = null;
+                board.realBoard.isSelected = false;
             }
         }
     }

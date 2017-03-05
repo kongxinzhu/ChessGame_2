@@ -1,8 +1,18 @@
-import java.util.LinkedList;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Created by caixinzhu on 2/23/17.
  */
+
+/*
+ * PieceBishop inherits from Piece Class
+ * method findAvailablePosition is to find available Move from specific bishop on current board
+ * the available moves are stored in Board instance
+ *
+ * there is a list named availableMove in Board Class
+ */
+
 public class PieceBishop extends Piece {
 
     public PieceBishop(String pieceName, String pieceImagePath, int pieceColor, Coordinate pieceCoordinate) {
@@ -37,6 +47,7 @@ public class PieceBishop extends Piece {
             temp = new Move(this.coordinate, board.moveToSouthEast(temp.endCoordinate));
         }
 
+        Collections.sort(board.availableMove, new MoveComparator(board));
         return board.availableMove.peek();
     }
 }

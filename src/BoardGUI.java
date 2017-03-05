@@ -8,11 +8,12 @@ public class BoardGUI extends JPanel {
     SquareOfBoard[][] buttons;
     Board realBoard;
 
-    // square where the valid selected piece is
-    SquareOfBoard start;
 
     // original color of square for the current valid move position
     LinkedList<Color> originalSquareColor;
+
+    // if highlight on board
+    boolean highLight;
 
     private Icon imageOfPiece;
 
@@ -75,23 +76,20 @@ public class BoardGUI extends JPanel {
 
 
     // update the icon on chess board in GUI
-    public void boardUpdate(Coordinate start, Coordinate end) {
-        buttons[start.row][start.col].setIcon(null);
-        imageOfPiece = new ImageIcon(getClass().getResource(realBoard.alivePieces.get(end).imagePath));
-        buttons[realBoard.alivePieces.get(end).coordinate.row][realBoard.alivePieces.get(end).coordinate.col].setIcon(imageOfPiece);
+    public void boardUpdate(Move move) {
+        buttons[move.startCoordinate.row][move.startCoordinate.col].setIcon(null);
+        imageOfPiece = new ImageIcon(getClass().getResource(realBoard.alivePieces.get(move.endCoordinate).imagePath));
+        buttons[realBoard.alivePieces.get(move.endCoordinate).coordinate.row][realBoard.alivePieces.get(move.endCoordinate).coordinate.col].setIcon(imageOfPiece);
     }
 
 
-    public void setHighLight() {
-        if (realBoard.availableMove.size() != 0) {
-            Move move = realBoard.availableMove.peek();
-            Color destination = buttons[move.endCoordinate.row][move.endCoordinate.col].getBackground();
-            Color start = buttons[realBoard.selectedPiece.coordinate.row][realBoard.selectedPiece.coordinate.col].getBackground();
-            originalSquareColor.add(destination);
-            originalSquareColor.add(start);
-            buttons[move.endCoordinate.row][move.endCoordinate.col].setBackground(Color.YELLOW);
-            buttons[move.startCoordinate.row][move.startCoordinate.col].setBackground(Color.YELLOW);
-        }
+    public void setHighLight(Move move) {
+        Color endColor = buttons[move.endCoordinate.row][move.endCoordinate.col].getBackground();
+        Color startColor = buttons[move.startCoordinate.row][move.startCoordinate.col].getBackground();
+        originalSquareColor.add(endColor);
+        originalSquareColor.add(startColor);
+        buttons[move.endCoordinate.row][move.endCoordinate.col].setBackground(Color.YELLOW);
+        buttons[move.startCoordinate.row][move.startCoordinate.col].setBackground(Color.YELLOW);
     }
 
     public void removeHighLight() {
@@ -103,7 +101,7 @@ public class BoardGUI extends JPanel {
             startColor = originalSquareColor.pop();
             move = realBoard.availableMove.pop();
             buttons[move.endCoordinate.row][move.endCoordinate.col].setBackground(destinationColor);
-            buttons[start.coordinateOfButton.row][start.coordinateOfButton.col].setBackground(startColor);
+            buttons[move.startCoordinate.row][move.startCoordinate.col].setBackground(startColor);
         }
     }
 }

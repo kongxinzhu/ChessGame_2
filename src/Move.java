@@ -1,9 +1,14 @@
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
  * Created by caixinzhu on 2/23/17.
  */
+
+/*
+ * Move class contains start coordinate and end coordinate
+ * moreover the Move instance has a variable to show if this Move can capture the opposite piece
+ */
+
 public class Move {
     Coordinate startCoordinate;
     Coordinate endCoordinate;
@@ -20,16 +25,4 @@ public class Move {
         this.endCoordinate = endCoordinate;
         this.captureOpposite = false;
     }
-
-
-    public static boolean isInAvailablePositionList(LinkedList<Move> moveList, Coordinate coordinate) {
-        for(Move move : moveList) {
-            if(move.endCoordinate == coordinate) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
 }

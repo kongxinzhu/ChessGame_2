@@ -1,9 +1,10 @@
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
  * Created by caixinzhu on 2/23/17.
  */
+
+
 public abstract class Piece {
     static final int BLACK = 0;
     static final int WHITE = 1;
@@ -23,7 +24,7 @@ public abstract class Piece {
     public boolean isValidPosition(Move move, Board board) {
         boolean added = false;
         if (move.endCoordinate != board.OUTOFBOARD) {
-            if (board.alivePieces.containsKey(move.endCoordinate) && board.alivePieces.get(move.endCoordinate).color != board.selectedPiece.color) {
+            if (board.alivePieces.containsKey(move.endCoordinate) && board.alivePieces.get(move.endCoordinate).color != board.alivePieces.get(move.startCoordinate).color) {
                 move.captureOpposite = true;
                 board.availableMove.add(move);
                 added = true;
@@ -34,8 +35,6 @@ public abstract class Piece {
         }
         return added;
     }
-
-
 
 
     public abstract Move findAvailablePosition(Board board);

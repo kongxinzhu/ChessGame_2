@@ -14,7 +14,12 @@ public class Hint {
 
     public Move calculateHint() {
         for(Piece p : board.alivePieces.values()) {
-            hintPositionList.add(p.findAvailablePosition(board));
+            if(board.turn % 2 == p.color) {
+                Move move = p.findAvailablePosition(board);
+                if(move != null) {
+                    hintPositionList.add(move);
+                }
+            }
         }
         Collections.sort(hintPositionList, new MoveComparator(board));
         return hintPositionList.peek();

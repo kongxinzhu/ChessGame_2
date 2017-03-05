@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 
 /**
@@ -48,6 +49,7 @@ public class PieceKing extends Piece {
         temp = new Move(this.coordinate, board.moveToSouthEast(this.coordinate));
         isValidPosition(temp, board);
 
+        Collections.sort(board.availableMove, new MoveComparator(board));
         return board.availableMove.peek();
     }
 }
