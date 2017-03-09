@@ -67,9 +67,15 @@ public class ChessGameGUI extends JFrame implements ActionListener {
         Object source = e.getSource();
 
         if (source == hint) {
+            if (board.moveHighLight) {
+                board.removeHighLightForAvailableMove();
+                board.moveHighLight = false;
+            }
+            board.realBoard.availableMove = new LinkedList();
+            board.realBoard.isSelected = false;
             Move hintMove = board.realBoard.calculateHint();
-            board.setHighLight(hintMove);
-            board.highLight = !board.highLight;
+            board.setHighLightForHint(hintMove);
+            board.hintHighLight = true;
         }
         // refresh the board
         else if (source == refresh) {
@@ -80,18 +86,37 @@ public class ChessGameGUI extends JFrame implements ActionListener {
             board.addActionListener(this);
             boardPanel.add(board);
         } else {
-            if(board.highLight) {
-                board.removeHighLight();
-                board.highLight = false;
-            }
+
             SquareOfBoard clickedSquare = (SquareOfBoard) source;
             Piece targetPiece = board.realBoard.alivePieces.get(clickedSquare.coordinateOfButton);
+
+
 
             // check if it's right turn
             if (targetPiece != null && targetPiece.color == board.realBoard.turn % 2 && !board.realBoard.isSelected) {
                 Piece selectedPiece = board.realBoard.alivePieces.get(clickedSquare.coordinateOfButton);
                 board.realBoard.isSelected = true;
-                selectedPiece.findAvailablePosition(board.realBoard);
+                //here
+                if (board.hintHighLight && selectedPiece.coordinate != board.realBoard.availableMove.peek().startCoordinate) {
+                    if (board.hintHighLight) {
+                        board.removeHighLightForHint();
+                        board.hintHighLight = false;
+                    }
+                    board.realBoard.availableMove.clear();
+                    selectedPiece.findAvailablePosition(board.realBoard);
+                    board.removeHighLightForHint();
+                    board.hintHighLight = false;
+                    board.setHighLightForAvailableMove();
+                    board.moveHighLight = true;
+                } else if(board.hintHighLight && selectedPiece.coordinate == board.realBoard.availableMove.peek().startCoordinate){
+                    board.realBoard.availableMove.clear();
+                    selectedPiece.findAvailablePosition(board.realBoard);
+                } else if(!board.hintHighLight) {
+                    selectedPiece.findAvailablePosition(board.realBoard);
+                    board.setHighLightForAvailableMove();
+                    board.moveHighLight = true;
+                }
+
 
             } else {
                 if (board.realBoard.isInAvailablePositionList(clickedSquare.coordinateOfButton)) {
@@ -101,6 +126,14 @@ public class ChessGameGUI extends JFrame implements ActionListener {
                     board.realBoard.turn++;
                 }
 
+                if (board.moveHighLight) {
+                    board.removeHighLightForAvailableMove();
+                    board.moveHighLight = false;
+                }
+                if (board.hintHighLight) {
+                    board.removeHighLightForHint();
+                    board.hintHighLight = false;
+                }
                 board.realBoard.availableMove = new LinkedList();
                 board.realBoard.isSelected = false;
             }

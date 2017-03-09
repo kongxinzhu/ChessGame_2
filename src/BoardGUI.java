@@ -12,8 +12,9 @@ public class BoardGUI extends JPanel {
     // original color of square for the current valid move position
     LinkedList<Color> originalSquareColor;
 
-    // if highlight on board
-    boolean highLight;
+    // if hint highlight on board
+    boolean hintHighLight;
+    boolean moveHighLight;
 
     private Icon imageOfPiece;
 
@@ -82,8 +83,26 @@ public class BoardGUI extends JPanel {
         buttons[realBoard.alivePieces.get(move.endCoordinate).coordinate.row][realBoard.alivePieces.get(move.endCoordinate).coordinate.col].setIcon(imageOfPiece);
     }
 
+    public void setHighLightForAvailableMove() {
+        originalSquareColor.clear();
+        for (Move move : realBoard.availableMove) {
+            Color c = buttons[move.endCoordinate.row][move.endCoordinate.col].getBackground();
+            originalSquareColor.add(c);
+            buttons[move.endCoordinate.row][move.endCoordinate.col].setBackground(Color.YELLOW);
+        }
+    }
 
-    public void setHighLight(Move move) {
+    public void removeHighLightForAvailableMove() {
+        Color color;
+        Move move;
+        while (!originalSquareColor.isEmpty()) {
+            color = originalSquareColor.pop();
+            move = realBoard.availableMove.pop();
+            this.buttons[move.endCoordinate.row][move.endCoordinate.col].setBackground(color);
+        }
+    }
+
+    public void setHighLightForHint(Move move) {
         Color endColor = buttons[move.endCoordinate.row][move.endCoordinate.col].getBackground();
         Color startColor = buttons[move.startCoordinate.row][move.startCoordinate.col].getBackground();
         originalSquareColor.add(endColor);
@@ -92,7 +111,7 @@ public class BoardGUI extends JPanel {
         buttons[move.startCoordinate.row][move.startCoordinate.col].setBackground(Color.YELLOW);
     }
 
-    public void removeHighLight() {
+    public void removeHighLightForHint() {
         Color destinationColor;
         Color startColor;
         Move move;
